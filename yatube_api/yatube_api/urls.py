@@ -1,6 +1,7 @@
-from django.contrib import admin
-from django.urls import include, path
-from django.views.generic import TemplateView
+"""Модуль содержит URL настройки адрессов приложения API."""
+from django.contrib import admin  # type: ignore
+from django.urls import include, path  # type: ignore
+from django.views.generic import TemplateView  # type: ignore
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -11,4 +12,3 @@ urlpatterns = [
         name='redoc'
     ),
 ]
-
