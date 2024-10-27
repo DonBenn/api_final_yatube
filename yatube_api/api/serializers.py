@@ -1,8 +1,6 @@
-"""Модуль содержит настройки сериализатора приложения API."""
-
+"""Модуль содержит настройки сериализаторов приложения API."""
 from rest_framework import serializers   # type: ignore
 from rest_framework.validators import UniqueTogetherValidator  # type: ignore
-from rest_framework.relations import SlugRelatedField  # type: ignore
 
 from posts.models import Comment, Post, Group, Follow, User
 
@@ -10,7 +8,9 @@ from posts.models import Comment, Post, Group, Follow, User
 class PostSerializer(serializers.ModelSerializer):
     """Настройки сериализатора модели Post."""
 
-    author = SlugRelatedField(slug_field='username', read_only=True)
+    author = serializers.SlugRelatedField(
+        slug_field='username', read_only=True
+    )
 
     class Meta:
         """Метаданные сериализатора постов."""
@@ -69,7 +69,7 @@ class FollowSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         """Метод валидации сериализатора."""
-        if self.context['request'].user == data['following']:
+        if data['user'] == data['following']:
             raise serializers.ValidationError(
                 'Нельзя подписаться на самого себя.'
             )

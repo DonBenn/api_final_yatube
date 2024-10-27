@@ -1,6 +1,7 @@
 """Модуль содержит конфигурации моделей приложения Post."""
 from django.contrib.auth import get_user_model  # type: ignore
 from django.db import models  # type: ignore
+from django.core.exceptions import ValidationError  # type: ignore
 
 from posts.constants import MAX_CHAR_FIELD_LENGTH, MAX_SLUG_FIELD_LENGTH
 
@@ -92,6 +93,17 @@ class Follow(models.Model):
                 name='unique_user_following'
             )
         ]
+
+    def clean(self):
+        """Проверяет данные модели на корректность перед сохранением."""
+        super().clean()
+        if self.user == self.following:
+            raise ValidationError('Нельзя подписаться на самого себя.')
+
+    def save(self, *args, **kwargs):
+        """Сохраняет модель в базу данных."""
+        self.clean()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         """Возвращает строковое представление объекта."""
