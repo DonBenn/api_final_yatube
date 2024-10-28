@@ -69,8 +69,7 @@ class FollowListAndCreate(generics.ListCreateAPIView):
 
     def get_queryset(self):
         """Определяет необходимый набор queryset для сериализации."""
-        user = self.request.user
-        return user.follower.all()
+        return self.request.user.follower.all()
 
     def perform_create(self, serializer):
         """Создание нового экземпляра модели после сериализации."""
